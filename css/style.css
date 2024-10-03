@@ -56,7 +56,7 @@ header{
 .isi{
     text-align: center;
     padding: 100px 20px;
-    position: relative; /* This is needed for absolute positioning */
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -111,4 +111,139 @@ header{
 .cam-img img{
     width: 100%;
     height: 100%;
+}
+
+.about{
+    padding: 50px 20px;
+    position: relative;
+    display: flex;
+    cursor: pointer;
+    margin: 250px;
+}
+
+.content{
+    display: flex;
+}
+
+.text{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 600px;
+}
+
+.text h1{
+    font-size: 22px;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 50px rgba(255, 255, 255, 0.2);
+}
+
+.text p{
+    font-size: 16px;
+    font-weight: 300;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.1), 0 0 50px rgba(255, 255, 255, 0.1);
+}
+
+.text a{
+    margin-top: 10px;
+    border: 2px solid #fff;
+    text-align: center;
+    height: 30px;
+    width: 100px;
+    font-weight: 200;
+    border-radius: 30px;
+    transition: 0.5s ease;
+}
+
+.text a:hover{
+    transform: scale(0.9);
+    background: var(--medium);
+    cursor: pointer;
+}
+
+.content-img{
+    position: relative;
+    bottom: 15%;
+    margin-left: 70px;
+    width: 284px;
+    height: 275px;
+    border-radius: 95px;
+    border: 3px solid #fff;
+    overflow: hidden;
+}
+
+.content-img img{
+    width: 100%;
+    height: 100%;
+    border-radius: 95px;
+}
+
+.blue-shadow{
+    position: absolute;
+    top: 40%;
+    left: 91.5%;
+    transform: translate(-50%, -50%);
+    width: 284px;
+    height: 275px;
+    border-radius: 95px;
+    background: radial-gradient(circle, rgba(3, 108, 157, 0.955), rgba(12, 70, 151, 0));
+    filter: blur(100px);
+    z-index: -10;
+}   
+
+.footer{
+    padding: 20px 270px;
+    border-top: 2px solid #fff;
+
+}
+
+.webcam-modal {
+    display: none; /* Initially hide the modal */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    z-index: 1000; /* High z-index to overlay other content */
+    justify-content: center;
+    align-items: center;
+}
+
+.webcam-content {
+    background-color: #222831;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+}
+
+.webcam-content video {
+    width: 100%;
+    max-width: 640px;
+    border: 2px solid #fff;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.emotion-display {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #fff;
+}
+
+/* Styling for content under the webcam */
+.cam-button, .cam-img img, .about a {
+    cursor: pointer;
 }

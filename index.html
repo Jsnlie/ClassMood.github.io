@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="icon" href="./Assests/emo.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="../Assests/emo.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;700&display=swap"/>
     <title>ClassMood</title>
 </head>
@@ -14,7 +14,7 @@
             <a href="#">ClassMood</a>
         </div>
         <div class="cam-button">
-            <a href="#">Cam Now</a>
+            <a href="#" id="camNowButton">Cam Now</a>
         </div>
     </header>
 
@@ -22,14 +22,107 @@
         <div class="shadow"></div>
         <div class="title">
             <h1>meet</h1>
-            <img src="./Assests/emo.png" alt="E-MO"> 
+            <img src="../Assests/emo.png" alt="E-MO"> 
             <h1>E-MO</h1>
         </div>
         <div class="border"></div>
         <div class="cam-img">
-            <img src="./Assests/cam.png" alt="Cam">
+            <img src="../Assests/cam.png" alt="Cam" id="camImgButton"">
         </div>
-        
     </section>
+    <section class="about">
+        <div class="content">
+            <div class="text">
+                <h1>Empowering Education Through Expressions</h1>
+                <p>Our AI-powered platform helps educators detect students' emotions in real-time through facial expression analysis, providing insights into their understanding and engagement levels during class. By identifying when students feel confused or disengaged, teachers can offer personalized support, fostering a more interactive and inclusive learning environment. With a simple and intuitive interface, we prioritize both ease of use and data privacy, ensuring a seamless experience for educators and students alike.</p>
+                <a href="#" id="tryNowButton">Try Now</a>        
+            </div>
+            <div class="blue-shadow"></div>
+            <div class="content-img">
+                <img src="../Assests/ai.jpeg" alt="AI">
+            </div>
+        </div>
+     </section>
+     <section class="footer">
+        <div class="footer-text">
+            <p>© 2023 ClassMood. All rights reserved.</p>
+        </div>
+     </section>
+
+      <div class="webcam-modal" id="webcamModal">
+        <div class="webcam-content">
+            <button class="close-btn" id="closeBtn">Close</button>
+            <video id="video" autoplay></video>
+            <canvas id="canvas"></canvas>
+            <div class="emotion-display" id="emotionDisplay">Detecting...</div>
+        </div>
+     </div>
+
+     <script>
+        const webcamModal = document.getElementById('webcamModal');
+        const video = document.getElementById('video');
+        const emotionDisplay = document.getElementById('emotionDisplay');
+        const closeBtn = document.getElementById('closeBtn');
+
+        let captureInterval; 
+        function showWebcam() {
+            webcamModal.style.display = 'flex'; 
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                });
+            if (!captureInterval) {
+                captureInterval = setInterval(captureAndSendFrame, 1000); 
+            }
+        }
+        function closeWebcam() {
+            webcamModal.style.display = 'none'; 
+            if (video.srcObject) {
+                const stream = video.srcObject;
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                video.srcObject = null;
+            }
+            clearInterval(captureInterval);
+            captureInterval = null; 
+        }
+        function captureAndSendFrame() {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+            console.log('Sending image data:', imageData); 
+
+            fetch('/detect-emotion', {
+                method: 'POST',
+                body: JSON.stringify({ image: imageData }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok, ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.emotion) {
+                    emotionDisplay.textContent = `Emotion: ${data.emotion}`;
+                } else {
+                    emotionDisplay.textContent = `Error: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                emotionDisplay.textContent = `Error: ${error.message}`;
+            });
+        }
+        document.getElementById('camNowButton').addEventListener('click', showWebcam);
+        document.getElementById('camImgButton').addEventListener('click', showWebcam);
+        document.getElementById('tryNowButton').addEventListener('click', showWebcam);
+        closeBtn.addEventListener('click', closeWebcam);
+    </script>
+
 </body>
 </html>
