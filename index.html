@@ -30,6 +30,7 @@
             <img src="../Assests/cam.png" alt="Cam" id="camImgButton"">
         </div>
     </section>
+
     <section class="about">
         <div class="content">
             <div class="text">
@@ -43,6 +44,7 @@
             </div>
         </div>
      </section>
+
      <section class="footer">
         <div class="footer-text">
             <p>© 2023 ClassMood. All rights reserved.</p>
@@ -64,7 +66,6 @@
         const emotionDisplay = document.getElementById('emotionDisplay');
         const closeBtn = document.getElementById('closeBtn');
 
-        let captureInterval; 
         function showWebcam() {
             webcamModal.style.display = 'flex'; 
 
@@ -72,9 +73,6 @@
                 .then(stream => {
                     video.srcObject = stream;
                 });
-            if (!captureInterval) {
-                captureInterval = setInterval(captureAndSendFrame, 1000); 
-            }
         }
         function closeWebcam() {
             webcamModal.style.display = 'none'; 
@@ -87,37 +85,7 @@
             clearInterval(captureInterval);
             captureInterval = null; 
         }
-        function captureAndSendFrame() {
-            const canvas = document.getElementById('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = canvas.toDataURL('image/png');
-            console.log('Sending image data:', imageData); 
 
-            fetch('/detect-emotion', {
-                method: 'POST',
-                body: JSON.stringify({ image: imageData }),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok, ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.emotion) {
-                    emotionDisplay.textContent = `Emotion: ${data.emotion}`;
-                } else {
-                    emotionDisplay.textContent = `Error: ${data.error}`;
-                }
-            })
-            .catch(error => {
-                emotionDisplay.textContent = `Error: ${error.message}`;
-            });
-        }
         document.getElementById('camNowButton').addEventListener('click', showWebcam);
         document.getElementById('camImgButton').addEventListener('click', showWebcam);
         document.getElementById('tryNowButton').addEventListener('click', showWebcam);
